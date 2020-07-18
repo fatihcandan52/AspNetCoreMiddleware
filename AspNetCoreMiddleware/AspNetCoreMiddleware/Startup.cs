@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AspNetCoreMiddleware.Middlewares;
+using AspNetCoreMiddleware.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +20,7 @@ namespace AspNetCoreMiddleware
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IPList>(Configuration.GetSection(nameof(IPList)));
             services.AddControllersWithViews();
         }
 
@@ -45,6 +43,8 @@ namespace AspNetCoreMiddleware
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<WhiteIPControl>();
 
             app.UseEndpoints(endpoints =>
             {
